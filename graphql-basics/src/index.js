@@ -3,56 +3,68 @@ import { createServer } from "node:http";
 
 // Demo data
 const users = [{
-  id: 1,
-  name: 'Akash',
-  email: 'akash.mehra99@gmail.com',
-  age: 30
+  id: '1',
+  name: 'Andrew',
+  email: 'andrew@example.com',
+  age: 27
 }, {
-  id: 2,
-  name: 'Divyanshi',
-  email: 'divyanshi@gmail.com',
-  age: 30
+  id: '2',
+  name: 'Sarah',
+  email: 'sarah@example.com'
 }, {
-  id: 3,
-  name: 'Harsh',
-  email: 'harsh@gmail.com'
+  id: '3',
+  name: 'Mike',
+  email: 'mike@example.com'
 }]
 
 const posts = [{
-  id: '1',
-  title: 'GrapgQl 101',
-  body: '101',
+  id: '10',
+  title: 'GraphQL 101',
+  body: 'This is how to use GraphQL...',
   published: true,
-  author: users[0]
-},{
-  id: '2',
-  title: 'GrapgQl 102',
-  body: '102',
-  published: true,
-  author: users[1]
+  author: '1'
+}, {
+  id: '11',
+  title: 'GraphQL 201',
+  body: 'This is an advanced GraphQL post...',
+  published: false,
+  author: '1'
+}, {
+  id: '12',
+  title: 'Programming Music',
+  body: '',
+  published: false,
+  author: '2'
+}]
 
-},{
-  id: '3',
-  title: 'GrapgQl 103',
-  body: '301',
-  published: true,
-  author: users[2]
-
-},{
-  id: '4',
-  title: 'GrapgQl 104',
-  body: '401',
-  published: true,
-  author: users[0]
-
-}];
-
+const comments = [{
+  id: '102',
+  text: 'This worked well for me. Thanks!',
+  author: '3',
+  post: '10'
+}, {
+  id: '103',
+  text: 'Glad you enjoyed it.',
+  author: '1',
+  post: '10'
+}, {
+  id: '104',
+  text: 'This did no work.',
+  author: '2',
+  post: '11'
+}, {
+  id: '105',
+  text: 'Nevermind. I got it to work.',
+  author: '1',
+  post: '11'
+}]
 const typeDefs = `
     type Query {
         users(query: String): [User!]!
         me: User!
         posts(query: String): [Post]!
-        post(query: String): Post!
+        post: Post!
+        comments: [Comment!]!
     }
 
     type User {
@@ -60,7 +72,8 @@ const typeDefs = `
         name: String!
         email: String!
         age: Int
-        
+        posts: [Post!]!
+        comments: [Comment!]!      
     }
 
     type Post {
@@ -69,7 +82,15 @@ const typeDefs = `
       body: String!
       published: Boolean!
       author: User!
+      comments: [Comment!]!
     }
+
+    type Comment {
+      id: ID!
+      text: String!
+      author: User!
+      post: Post!
+  }
 `;
 
 const resolvers = {
@@ -103,6 +124,31 @@ const resolvers = {
         body: '',
         published: true
       }
+    },
+    comments: (parent, args, ctx, info) => comments,
+  },
+  Post: {
+    author: (parent, args, ctx, info) => {
+      const authorId = parent.author;
+      return users.find((user) => user.id === authorId);
+    }
+  },
+  User: {
+    posts: (parent, args, ctx, info) => {
+      const userId = parent.id;
+      return posts.filter((post) => post.author === userId);
+    }
+  },
+  Comment: {
+    author: (parent, args, ctx, info) => {
+      return users.find((user) => {
+        return user.id === parent.author
+      })
+    },
+    post: (parent, args, ctx, info) => {
+      return posts.find((post) => {
+        return post.id === parent.post
+      })
     }
   },
 };
