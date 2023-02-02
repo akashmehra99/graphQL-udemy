@@ -9,10 +9,12 @@ specifiers:
   graphql: ^16.6.0
   graphql-yoga: ^3.3.0
   nodemon: ^2.0.20
+  uuid: ^9.0.0
 
 dependencies:
   graphql: 16.6.0
   graphql-yoga: 3.3.0_ykzowzmb7rcumunkscnbisnkom
+  uuid: 9.0.0
 
 devDependencies:
   '@babel/cli': 7.20.7_@babel+core@7.20.12
@@ -2642,6 +2644,11 @@ packages:
     resolution: {integrity: sha512-5vZjFlH9ofROmuWmXM9yj2wljYKgWstGwe8YTyiqM7hVum/g9LyCizPZtb3UqsuppVwety9QJmfc42VggLpTgg==}
     dependencies:
       braces: 3.0.2
+    dev: false
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
     dev: false
 
   /v8flags/3.2.0:

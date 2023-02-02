@@ -1,5 +1,6 @@
 import { createSchema, createYoga } from "graphql-yoga";
 import { createServer } from "node:http";
+import {v4 as uuidv4 } from 'uuid'
 
 // Demo data
 const users = [{
@@ -74,6 +75,11 @@ const typeDefs = `
         age: Int
         posts: [Post!]!
         comments: [Comment!]!      
+    }
+
+    type Mutation {
+      createUser(name: String!, email: String!, age: Int): User!
+      createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
     }
 
     type Post {
@@ -151,6 +157,32 @@ const resolvers = {
       })
     }
   },
+  Mutation: {
+    createUser : (parent, args, ctx, info) => {
+      const emailTaken = users.some((user) => user.email === args.email);
+      if (emailTaken) {        
+        throw new Error('Email already taken.');
+      }
+      const user = {
+        id: uuidv4(),
+        ...args
+      }
+      users.push(user);
+      return user;
+    },
+    createPost: (parent, args, ctx, info) => {
+      const userExists = users.some((user) => user.id === args.author);
+      if (!userExists) {
+        throw new Error('User not Found');
+      }
+      const post = {
+        id: uuidv4(),
+        ...args
+      }
+      posts.push(post);
+      return post;
+    }
+  }
 };
 
 const yoga = createYoga({
