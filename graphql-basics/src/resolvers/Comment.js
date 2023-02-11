@@ -8,5 +8,5 @@ export const Comment = {
         return db.posts.find((post) => {
             return post.id === parent.post;
         });
-    },
+    }
 };

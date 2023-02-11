@@ -17,12 +17,12 @@ const yoga = createYoga({
             Mutation,
             User,
             Comment,
-            Post,
-        },
+            Post
+        }
     }),
     context: {
-        db,
-    },
+        db
+    }
 });
 
 const server = createServer(yoga);

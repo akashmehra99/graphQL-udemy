@@ -5,7 +5,7 @@ export const Query = {
         }
         const query = args.query.toLowerCase();
         return db.users.filter((user) =>
-            user.name.toLowerCase().includes(query),
+            user.name.toLowerCase().includes(query)
         );
     },
     me: () => {
@@ -13,7 +13,7 @@ export const Query = {
             id: 123098,
             name: 'Akash Mehra',
             email: 'akash.mehra99@gmail.com',
-            age: 30,
+            age: 30
         };
     },
     posts: (parent, args, { db }, info) => {
@@ -24,7 +24,7 @@ export const Query = {
         return db.posts.filter(
             (pos) =>
                 pos.title.toLowerCase().includes(query) ||
-                pos.body.toLowerCase().includes(query),
+                pos.body.toLowerCase().includes(query)
         );
     },
     post: () => {
@@ -32,8 +32,8 @@ export const Query = {
             id: '092',
             title: 'GrapgQl 101',
             body: '',
-            published: true,
+            published: true
         };
     },
-    comments: (parent, args, { db }, info) => db.comments,
+    comments: (parent, args, { db }, info) => db.comments
 };

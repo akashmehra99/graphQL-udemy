@@ -3,14 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 export const Mutation = {
     createUser: (parent, args, { db }, info) => {
         const emailTaken = db.users.some(
-            (user) => user.email === args.data.email,
+            (user) => user.email === args.data.email
         );
         if (emailTaken) {
             throw new Error('Email already taken.');
         }
         const user = {
             id: uuidv4(),
-            ...args.data,
+            ...args.data
         };
         db.users.push(user);
         return user;
@@ -26,28 +26,28 @@ export const Mutation = {
             const match = post.author === args.id;
             if (match) {
                 db.comments = db.comments.filter(
-                    (comment) => comment.author !== post.id,
+                    (comment) => comment.author !== post.id
                 );
             }
             return !match;
         });
 
         db.comments = db.comments.filter(
-            (comment) => comment.author !== args.id,
+            (comment) => comment.author !== args.id
         );
 
         return deletedUsers[0];
     },
     createPost: (parent, args, { db }, info) => {
         const userExists = db.users.some(
-            (user) => user.id === args.data.author,
+            (user) => user.id === args.data.author
         );
         if (!userExists) {
             throw new Error('User not Found');
         }
         const post = {
             id: uuidv4(),
-            ...args.data,
+            ...args.data
         };
         db.posts.push(post);
         return post;
@@ -63,24 +63,24 @@ export const Mutation = {
     },
     createComment: (parent, args, { db }, info) => {
         const userExists = db.users.some(
-            (user) => user.id === args.data.author,
+            (user) => user.id === args.data.author
         );
         const postExists = db.posts.some(
-            (post) => post.published && post.id === args.data.post,
+            (post) => post.published && post.id === args.data.post
         );
         if (!userExists || !postExists) {
             throw new Error('Unable to find user or post');
         }
         const comment = {
             id: uuidv4(),
-            ...args.data,
+            ...args.data
         };
         db.comments.push(comment);
         return comment;
     },
     deleteComment: (parent, args, { db }, info) => {
         const commentIndex = db.comments.findIndex(
-            (comment) => comment.id === args.id,
+            (comment) => comment.id === args.id
         );
         if (commentIndex === -1) {
             throw new Error('Comment not forund');
@@ -88,5 +88,5 @@ export const Mutation = {
         const deletedComments = comments.splice(commentIndex, 1);
 
         return deletedComments[0];
-    },
+    }
 };
