@@ -11,5 +11,10 @@ export const Subscription = {
 
             return pubSub.subscribe(`comment ${postId}`);
         }
+    },
+    post: {
+        subscribe: (parent, args, { pubSub }, info) => {
+            return pubSub.subscribe('post');
+        }
     }
 };
