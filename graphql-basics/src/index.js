@@ -1,4 +1,4 @@
-import { createSchema, createYoga } from 'graphql-yoga';
+import { createSchema, createYoga, createPubSub } from 'graphql-yoga';
 import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import path from 'node:path';
@@ -8,6 +8,7 @@ import { Mutation } from './resolvers/Mutation';
 import { User } from './resolvers/User';
 import { Post } from './resolvers/Post';
 import { Comment } from './resolvers/Comment';
+import { Subscription } from './resolvers/Subscription';
 
 const yoga = createYoga({
     schema: createSchema({
@@ -17,11 +18,13 @@ const yoga = createYoga({
             Mutation,
             User,
             Comment,
-            Post
+            Post,
+            Subscription
         }
     }),
     context: {
-        db
+        db,
+        pubSub: createPubSub()
     }
 });
 
