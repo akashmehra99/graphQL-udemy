@@ -157,21 +157,32 @@ export const Mutation = {
             ...args.data
         };
         db.comments.push(comment);
-        pubSub.publish(`comment ${args.data.post}`, { comment });
+        pubSub.publish(`comment ${args.data.post}`, {
+            comment: {
+                mutation: 'CREATED',
+                data: comment
+            }
+        });
         return comment;
     },
-    deleteComment: (parent, args, { db }, info) => {
+    deleteComment: (parent, args, { db, pubSub }, info) => {
         const commentIndex = db.comments.findIndex(
             (comment) => comment.id === args.id
         );
         if (commentIndex === -1) {
             throw new Error('Comment not forund');
         }
-        const deletedComments = comments.splice(commentIndex, 1);
+        const deletedComments = db.comments.splice(commentIndex, 1);
+        pubSub.publish(`comment ${deletedComments[0].post}`, {
+            comment: {
+                mutation: 'DELETED',
+                data: deletedComments[0]
+            }
+        });
 
         return deletedComments[0];
     },
-    updateComment: (parent, args, { db }, info) => {
+    updateComment: (parent, args, { db, pubSub }, info) => {
         const { id, data } = args;
         const comment = db.comments.find((comment) => comment.id === id);
         if (!comment) {
@@ -181,6 +192,12 @@ export const Mutation = {
         if (typeof text === 'string') {
             comment.text = text;
         }
+        pubSub.publish(`comment ${comment.post}`, {
+            comment: {
+                mutation: 'UPDATED',
+                data: comment
+            }
+        });
         return comment;
     }
 };
